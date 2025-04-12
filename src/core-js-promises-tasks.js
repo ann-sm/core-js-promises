@@ -39,14 +39,13 @@ function getPromise(number) {
  * Promise.resolve('success') => promise that will be fulfilled with 'success' value
  * Promise.reject('fail')     => promise that will be fulfilled with 'fail' value
  */
-function getPromiseResult(/* source */) {
-  throw new Error('Not implemented');
-
-  // return new Promise((resolve) => {
-  //   let message;
-  //   message = new Promise(source) ? 'success' : 'fail';
-  //   resolve(message);
-  // });
+function getPromiseResult(source) {
+  return new Promise((resolve) => {
+    source.then(
+      () => resolve('success'),
+      () => resolve('fail')
+    );
+  });
 }
 
 /**
@@ -100,8 +99,8 @@ function getFirstPromiseResult(promises) {
  * [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)] => Promise fulfilled with [1, 2, 3]
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)] => Promise rejected with 2
  */
-function getAllOrNothing(/* promises */) {
-  throw new Error('Not implemented');
+function getAllOrNothing(promises) {
+  return Promise.all(promises).then((value) => value);
 }
 
 /**
@@ -116,8 +115,12 @@ function getAllOrNothing(/* promises */) {
  * [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)] => Promise fulfilled with [1, 2, 3]
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)]  => Promise fulfilled with [1, null, 3]
  */
-function getAllResult(/* promises */) {
-  throw new Error('Not implemented');
+function getAllResult(promises) {
+  return Promise.allSettled(promises).then((results) =>
+    results.map((result) =>
+      result.status === 'fulfilled' ? result.value : null
+    )
+  );
 }
 
 /**
